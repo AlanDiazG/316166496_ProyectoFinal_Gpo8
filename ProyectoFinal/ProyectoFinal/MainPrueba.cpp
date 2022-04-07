@@ -43,7 +43,7 @@ GLfloat lastY = HEIGHT / 2.0;
 bool keys[1024];
 bool firstMouse = true;
 float range = 0.0f;
-float rot = 0.0f;
+float rot = 90.0f;
 float movCamera = 0.0f;
 
 // Light attributes
@@ -195,16 +195,10 @@ int main()
 	Shader SkyBoxshader("Shaders/SkyBox.vs", "Shaders/SkyBox.frag");
 	Shader animShader("Shaders/anim.vs", "Shaders/anim.frag");
 
-	Model BotaDer((char*)"Models/Personaje/bota.obj");
-	Model PiernaDer((char*)"Models/Personaje/piernader.obj");
-	Model PiernaIzq((char*)"Models/Personaje/piernaizq.obj");
-	Model Torso((char*)"Models/Personaje/torso.obj");
-	Model BrazoDer((char*)"Models/Personaje/brazoder.obj");
-	Model BrazoIzq((char*)"Models/Personaje/brazoizq.obj");
-	Model Cabeza((char*)"Models/Personaje/cabeza.obj");
+	Model Mesa_circular((char*)"Models/Mesa_circular/Mesa_circular.obj");
+	Model Hookah((char*)"Models/Hookah/Hookah.obj");
+	Model Sofa((char*)"Models/Sofa/Sofa.obj");
 
-	//Objeto traslucido
-	Model objTras("Models/Cubo/Cube01.obj");
 
 	// Build and compile our shader program
 
@@ -402,11 +396,11 @@ int main()
 	GLuint cubemapTexture = TextureLoading::LoadCubemap(faces);
 
 	glm::mat4 projection = glm::perspective(camera.GetZoom(), (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 1000.0f);
-
+	
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
-
+		
 		// Calculate deltatime of current frame
 		GLfloat currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
@@ -523,92 +517,33 @@ int main()
 
 
 		//Carga de modelo 
-		//Personaje
-
 		
+		//Mesa
 		view = camera.GetViewMatrix();
 		glm::mat4 model(1);
-		tmp = model = glm::translate(model, glm::vec3(0, 1, 0));
+		tmp = model = glm::translate(model, glm::vec3(0, 0, 0));
 		model = glm::translate(model,glm::vec3(posX,posY,posZ));
-		model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Torso.Draw(lightingShader);
+		Mesa_circular.Draw(lightingShader);
 
-	
-
-		//Pierna Izq
-		view = camera.GetViewMatrix();
-		model = glm::translate(tmp, glm::vec3(-0.5f, 0.0f, -0.1f));
-		model = glm::translate(model, glm::vec3(posX, posY, posZ));
-		model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0));
-		model = glm::rotate(model, glm::radians(-rotRodIzq), glm::vec3(1.0f, 0.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
-		PiernaDer.Draw(lightingShader);
-	//	Pie Izq
-		view = camera.GetViewMatrix();
-		model = glm::translate(model, glm::vec3(0, -0.9f, -0.2f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		BotaDer.Draw(lightingShader);
-
-		//Pierna Der
-		view = camera.GetViewMatrix();
-		model = glm::translate(tmp, glm::vec3(0.5f, 0.0f, -0.1f));
-		model = glm::translate(model, glm::vec3(posX, posY, posZ));
-		model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
-
-		PiernaIzq.Draw(lightingShader);
-		//Pie Der
-		view = camera.GetViewMatrix();
-		model = glm::translate(model, glm::vec3(0, -0.9f, -0.2f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		BotaDer.Draw(lightingShader);
-
-		//Brazo derecho
+		//Hookah
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(0, 2.3, 0));
 		model = glm::translate(model, glm::vec3(posX, posY, posZ));
-		model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(-rotRodIzq), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::translate(model, glm::vec3(-0.75f, 2.5f, 0));
+		model = glm::scale(model, glm::vec3(2));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		BrazoDer.Draw(lightingShader);
+		Hookah.Draw(lightingShader);
 
-	//	Brazo Izquierdo
+		//Sofa
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(5, 0, 0));
 		model = glm::translate(model, glm::vec3(posX, posY, posZ));
-		model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::translate(model, glm::vec3(0.75f, 2.5f, 0));
+		model = glm::rotate(model, glm::radians(3*rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		BrazoIzq.Draw(lightingShader);
-
-		//Cabeza
-		view = camera.GetViewMatrix();
-		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(posX, posY, posZ));
-		model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0));
-		model = glm::translate(model, glm::vec3(0.0f, 2.5f, 0));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
-		Cabeza.Draw(lightingShader);
-	
-		//Traslucidez
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-		model = glm::mat4(1);
-		model = glm::scale(model, glm::vec3(1.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
-		objTras.Draw(lightingShader);
-		glDisable(GL_BLEND);
-		glEnable(GL_DEPTH_TEST);
-		glBindVertexArray(0);
-
+		Sofa.Draw(lightingShader);
 
 		// Also draw the lamp object, again binding the appropriate shader
 		lampShader.Use();
@@ -637,20 +572,20 @@ int main()
 		glBindVertexArray(0);
 
 
-		// Draw skybox as last
-		glDepthFunc(GL_LEQUAL);  // Change depth function so depth test passes when values are equal to depth buffer's content
-		SkyBoxshader.Use();
-		view = glm::mat4(glm::mat3(camera.GetViewMatrix()));	// Remove any translation component of the view matrix
-		glUniformMatrix4fv(glGetUniformLocation(SkyBoxshader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(glGetUniformLocation(SkyBoxshader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		//// Draw skybox as last
+		//glDepthFunc(GL_LEQUAL);  // Change depth function so depth test passes when values are equal to depth buffer's content
+		//SkyBoxshader.Use();
+		//view = glm::mat4(glm::mat3(camera.GetViewMatrix()));	// Remove any translation component of the view matrix
+		//glUniformMatrix4fv(glGetUniformLocation(SkyBoxshader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		//glUniformMatrix4fv(glGetUniformLocation(SkyBoxshader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
-		// skybox cube
-		glBindVertexArray(skyboxVAO);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		glBindVertexArray(0);
-		glDepthFunc(GL_LESS); // Set depth function back to default
+		//// skybox cube
+		//glBindVertexArray(skyboxVAO);
+		//glActiveTexture(GL_TEXTURE1);
+		//glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
+		//glBindVertexArray(0);
+		//glDepthFunc(GL_LESS); // Set depth function back to default
 
 
 
