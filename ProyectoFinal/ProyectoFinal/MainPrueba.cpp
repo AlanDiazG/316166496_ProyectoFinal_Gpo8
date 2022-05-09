@@ -216,6 +216,14 @@ int main()
 	Model Puerta((char*)"Models/HouseAll/puerta.obj"); //funciona
 	Model Puerta2((char*)"Models/HouseAll/puerta_azul.obj"); //funciona
 	Model techo((char*)"Models/Techo/techo.obj"); //funciona
+	Model Jukebox((char*)"Models/Jukebox/Jukebox.obj"); //funciona
+	Model Disque((char*)"Models/Jukebox/Jukebox_disque.obj"); //funciona
+	Model Luz_techo((char*)"Models/Luz_techo/Luz_techo.obj"); //funciona
+	Model Barra((char*)"Models/Barra/Barra.obj"); //funciona
+	Model Stool((char*)"Models/Stool/Stool.obj"); //funciona
+	Model Monkey((char*)"Models/Changuito/Monkey.obj"); //funciona
+	Model Monkey_izq((char*)"Models/Changuito/Monkey_Izq.obj"); //funciona
+	Model Monkey_der((char*)"Models/Changuito/Monkey_Der.obj"); //funciona
 
 	// Build and compile our shader program
 
@@ -538,7 +546,7 @@ int main()
 		//Guante
 		view = camera.GetViewMatrix();
 		glm::mat4 model(1);
-		tmp = model = glm::translate(model, glm::vec3(50, 8, -50));
+		tmp = model = glm::translate(model, glm::vec3(52, 10.3, -53));
 		model = glm::translate(model, glm::vec3(posX, posY, posZ));
 		model = glm::scale(model, glm::vec3(2));
 		model = glm::rotate(model, glm::radians(2 * rot), glm::vec3(1.0f, 0.0f, 0.0));
@@ -549,39 +557,171 @@ int main()
 		//Mesa
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		tmp = model = glm::translate(model, glm::vec3(70, 0, -70));
+		tmp = model = glm::translate(model, glm::vec3(85, 0.2, -80));
 		model = glm::translate(model,glm::vec3(posX,posY,posZ));
-		model = glm::scale(model, glm::vec3(4));
+		model = glm::scale(model, glm::vec3(5));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Mesa_circular.Draw(lightingShader);
 
 		//Mesa 2
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		tmp = model = glm::translate(model, glm::vec3(50, 0, -50));
+		tmp = model = glm::translate(model, glm::vec3(52, 0.2, -53));
 		model = glm::translate(model, glm::vec3(posX, posY, posZ));
-		model = glm::scale(model, glm::vec3(4));
+		model = glm::scale(model, glm::vec3(5));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Mesa_circular.Draw(lightingShader);
+		
+		//Mesa 3
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		tmp = model = glm::translate(model, glm::vec3(110, 0.4, -45));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::scale(model, glm::vec3(5));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Mesa_circular.Draw(lightingShader);
+
+		//Monkey
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		tmp = model = glm::translate(model, glm::vec3(110, 15, -45));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::scale(model, glm::vec3(.2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Monkey.Draw(lightingShader);
+
+		//Monkey_izq
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		tmp = model = glm::translate(model, glm::vec3(110, 15, -45));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::scale(model, glm::vec3(.2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Monkey_izq.Draw(lightingShader);
+		
+		//Monkey_der
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		tmp = model = glm::translate(model, glm::vec3(110, 15, -45));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::scale(model, glm::vec3(.2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Monkey_der.Draw(lightingShader);
+
+		//Stool 1
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		tmp = model = glm::translate(model, glm::vec3(60, 4, -50));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::scale(model, glm::vec3(0.6));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Stool.Draw(lightingShader);
+
+		//Stool 2
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		tmp = model = glm::translate(model, glm::vec3(50, 4, -70));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::scale(model, glm::vec3(0.6));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Stool.Draw(lightingShader);
+		
+		//Stool 3
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		tmp = model = glm::translate(model, glm::vec3(73, 4, -80));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::scale(model, glm::vec3(0.6));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Stool.Draw(lightingShader);
+
+		//Stool 4
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		tmp = model = glm::translate(model, glm::vec3(98, 4.2, -45));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::scale(model, glm::vec3(0.6));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Stool.Draw(lightingShader);
+
+		//Stool 5
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		tmp = model = glm::translate(model, glm::vec3(100, 4.2, -83));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::scale(model, glm::vec3(0.6));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Stool.Draw(lightingShader);
+
+
+		//Barra
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		tmp = model = glm::translate(model, glm::vec3(77, -0.2, -96));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2.7));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Barra.Draw(lightingShader);
 
 		//Hookah
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(70,8.3, -70));
+		model = glm::translate(model, glm::vec3(85, 11.3, -80));
 		model = glm::translate(model, glm::vec3(posX, posY, posZ));
-		model = glm::scale(model, glm::vec3(4));
+		model = glm::scale(model, glm::vec3(7));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Hookah.Draw(lightingShader);
 
 		//Sofa
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(70, 0, 10));
+		model = glm::translate(model, glm::vec3(65, 0, 13));
 		model = glm::translate(model, glm::vec3(posX, posY, posZ));
 		model = glm::rotate(model, glm::radians(2*rot), glm::vec3(0.0f, 1.0f, 0.0));
-		model = glm::scale(model, glm::vec3(8));
+		model = glm::scale(model, glm::vec3(8.6));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Sofa.Draw(lightingShader);
+		
+		//Sofa 2
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(106, 0, 13));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(2*rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(8.6));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Sofa.Draw(lightingShader);
+		
+		//Sofa 3
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(0, 0, -49.2));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(1*rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(8.5));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Sofa.Draw(lightingShader);
+
+		//Jukebox
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(20, 0, -11));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(2 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(.6));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Jukebox.Draw(lightingShader);
+
+		//Disque
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(20, 4.8, -1.7));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(2 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(.4));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Disque.Draw(lightingShader);
 
 		//palco
 		view = camera.GetViewMatrix();
