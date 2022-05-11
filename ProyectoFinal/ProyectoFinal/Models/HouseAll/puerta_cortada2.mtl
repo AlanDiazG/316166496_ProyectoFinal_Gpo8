@@ -14,6 +14,15 @@ Ni 1.00
 Ks 0.00 0.00 0.00
 map_Ks Marcos_azules.png
 Ns 18.00
+newmtl pasted__pasted__phong23SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Marcos_azules.png
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
 newmtl pasted__pasted__phong24SG1
 illum 4
 Kd 0.00 0.00 0.00
@@ -82,6 +91,15 @@ map_Kd TexturesCom_BuildingsVenice0042_M.png
 Ni 1.00
 Ks 0.00 0.00 0.00
 map_Ks Marcos_azules.png
+Ns 18.00
+newmtl pasted__phong26SG1
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd takif_slk_BaseColor.png
+Ni 1.00
+Ks 0.50 0.50 0.50
 Ns 18.00
 newmtl phong2SG
 illum 4

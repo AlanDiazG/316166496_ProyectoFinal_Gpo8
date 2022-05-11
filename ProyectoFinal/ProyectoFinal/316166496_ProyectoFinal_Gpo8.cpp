@@ -44,7 +44,19 @@ bool keys[1024];
 bool firstMouse = true;
 float range = 0.0f;
 float rot = 90.0f;
+float rotpuerta = 0;
 float movCamera = 0.0f;
+
+//Movimiento Diana
+float movKitY = 0.0;
+float movKitZ = 0.0;
+float rotKit = 0.0;
+
+bool circuito = false;
+bool recorrido1 = true;
+bool recorrido2 = false;
+bool recorrido3 = false;
+bool recorrido4 = false;
 
 // Light attributes
 glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
@@ -59,7 +71,8 @@ GLfloat deltaTime = 100.0f;	// Time between current frame and last frame
 GLfloat lastFrame = 0.0f;  	// Time of last frame
 
 // Keyframes
-float posX =PosIni.x, posY = PosIni.y, posZ = PosIni.z, rotRodIzq = 0;
+float posX =PosIni.x, posY = PosIni.y, posZ = PosIni.z, rotRodIzq = 0, rotManIzq;
+float rotManDer;
 
 #define MAX_FRAMES 9
 int i_max_steps = 190;
@@ -75,12 +88,18 @@ typedef struct _frame
 	float incZ;		//Variable para IncrementoZ
 	float rotRodIzq;
 	float rotInc;
+	float rotInc3;
+	float rotInc4;
+	float rotManIzq;
+	float rotManDer;
 
 }FRAME;
 
 FRAME KeyFrame[MAX_FRAMES];
 int FrameIndex = 0;			//introducir datos
 bool play = false;
+bool aux = false;
+bool puerta = false;
 int playIndex = 0;
 
 // Positions of the point lights
@@ -106,7 +125,8 @@ void saveFrame(void)
 	KeyFrame[FrameIndex].posZ = posZ;
 	
 	KeyFrame[FrameIndex].rotRodIzq = rotRodIzq;
-	
+	KeyFrame[FrameIndex].rotManIzq = rotManIzq;
+	KeyFrame[FrameIndex].rotManDer = rotManDer;
 
 	FrameIndex++;
 }
@@ -118,6 +138,8 @@ void resetElements(void)
 	posZ = KeyFrame[0].posZ;
 
 	rotRodIzq = KeyFrame[0].rotRodIzq;
+	rotManIzq = KeyFrame[0].rotManIzq;
+	rotManDer = KeyFrame[0].rotManDer;
 
 }
 
@@ -129,7 +151,8 @@ void interpolation(void)
 	KeyFrame[playIndex].incZ = (KeyFrame[playIndex + 1].posZ - KeyFrame[playIndex].posZ) / i_max_steps;
 	
 	KeyFrame[playIndex].rotInc = (KeyFrame[playIndex + 1].rotRodIzq - KeyFrame[playIndex].rotRodIzq) / i_max_steps;
-
+	KeyFrame[playIndex].rotInc3 = (KeyFrame[playIndex + 1].rotManIzq - KeyFrame[playIndex].rotManIzq) / i_max_steps;
+	KeyFrame[playIndex].rotInc4 = (KeyFrame[playIndex + 1].rotManDer - KeyFrame[playIndex].rotManDer) / i_max_steps;
 }
 
 
@@ -199,7 +222,7 @@ int main()
 	Model Hookah((char*)"Models/Hookah/Hookah.obj");
 	Model Sofa((char*)"Models/Sofa/Sofa.obj");
 	Model Guante((char*)"Models/Guante/Guante.obj");
-	//Model Puerta((char*)"Models/House/Puerta.obj");
+	Model Puerta((char*)"Models/House/Puerta.obj");
 	Model Luces((char*)"Models/House/Luces_esfericas.obj");
 	
 	Model palco((char*)"Models/House2/palco.obj"); //funciona
@@ -207,13 +230,15 @@ int main()
 	Model wall((char*)"Models/House3/wall.obj"); //funciona
 	Model wall1((char*)"Models/House3/wall1.obj"); //funciona
 	Model wall2((char*)"Models/House3/wall2.obj"); //funciona
-	Model wall3((char*)"Models/House3/wall3.obj"); //funciona
+	//Model wall3((char*)"Models/House3/wall3.obj"); //funciona
+	Model wall3((char*)"Models/Houseall/puerta_cortada.obj"); //funciona
+	Model wallcita((char*)"Models/Houseall/paredcita.obj"); //funciona
 	Model vapor((char*)"Models/House3/vapor.obj"); //funciona
 	Model altar((char*)"Models/House4/altar.obj"); //funciona
 	Model beer((char*)"Models/HouseAll/beer.obj"); //funciona
 	Model ventana((char*)"Models/HouseAll/ventana.obj"); //funciona
 	Model piso((char*)"Models/HouseAll/piso.obj"); //funciona
-	Model Puerta((char*)"Models/HouseAll/puerta.obj"); //funciona
+	//Model Puerta((char*)"Models/HouseAll/puerta.obj"); //funciona
 	Model Puerta2((char*)"Models/HouseAll/puerta_azul.obj"); //funciona
 	Model techo((char*)"Models/Techo/techo.obj"); //funciona
 	Model Jukebox((char*)"Models/Jukebox/Jukebox.obj"); //funciona
@@ -224,6 +249,8 @@ int main()
 	Model Monkey((char*)"Models/Changuito/Monkey.obj"); //funciona
 	Model Monkey_izq((char*)"Models/Changuito/Monkey_Izq.obj"); //funciona
 	Model Monkey_der((char*)"Models/Changuito/Monkey_Der.obj"); //funciona
+	Model Diana((char*)"Models/Diana/Diana.obj"); //funciona
+
 
 	// Build and compile our shader program
 
@@ -235,8 +262,8 @@ int main()
 		KeyFrame[i].incX = 0;
 		KeyFrame[i].incY = 0;
 		KeyFrame[i].incZ = 0;
-		KeyFrame[i].rotRodIzq = 0;
-		KeyFrame[i].rotInc = 0;
+		KeyFrame[i].rotManIzq = 0;
+		KeyFrame[i].rotManDer = 0;
 	}
 
 
@@ -409,6 +436,23 @@ int main()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT,GL_FALSE, 3 * sizeof(GLfloat), (GLvoid *)0);
 
+	//Set Monkey movement
+	rotManDer = -10;
+	rotManIzq = 10;
+	saveFrame();
+	rotManDer = 18;
+	rotManIzq = -18;
+	saveFrame();
+	rotManDer = -10;
+	rotManIzq = 10;
+	saveFrame();
+	rotManDer = 18;
+	rotManIzq = -18;
+	saveFrame();
+	rotManDer = -10;
+	rotManIzq = 10;
+	saveFrame();
+
 	// Load textures
 	vector<const GLchar*> faces;
 	faces.push_back("SkyBox/right.tga");
@@ -426,6 +470,7 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		
+
 		// Calculate deltatime of current frame
 		GLfloat currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
@@ -542,6 +587,7 @@ int main()
 
 
 		//Carga de modelo 
+
 		
 		//Guante
 		view = camera.GetViewMatrix();
@@ -552,7 +598,7 @@ int main()
 		model = glm::rotate(model, glm::radians(2 * rot), glm::vec3(1.0f, 0.0f, 0.0));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Guante.Draw(lightingShader);
-
+		
 
 		//Mesa
 		view = camera.GetViewMatrix();
@@ -584,7 +630,7 @@ int main()
 		//Monkey
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		tmp = model = glm::translate(model, glm::vec3(110, 15, -45));
+		tmp = model = glm::translate(model, glm::vec3(110, 13.2, -45));
 		model = glm::translate(model, glm::vec3(posX, posY, posZ));
 		model = glm::scale(model, glm::vec3(.2));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
@@ -593,8 +639,9 @@ int main()
 		//Monkey_izq
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		tmp = model = glm::translate(model, glm::vec3(110, 15, -45));
+		tmp = model = glm::translate(model, glm::vec3(110, 13.2, -45));
 		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(rotManIzq), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(.2));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Monkey_izq.Draw(lightingShader);
@@ -602,11 +649,36 @@ int main()
 		//Monkey_der
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		tmp = model = glm::translate(model, glm::vec3(110, 15, -45));
+		tmp = model = glm::translate(model, glm::vec3(110, 13.2, -45));
 		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(rotManDer), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(.2));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Monkey_der.Draw(lightingShader);
+		
+		//Puerta2
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::translate(model, glm::vec3(-4.8, 0, 23.6));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::rotate(model, glm::radians(rotpuerta), glm::vec3(0.0f, 1.0, 0.0f));
+		model = glm::scale(model, glm::vec3(2));
+
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Puerta2.Draw(lightingShader);
+
+		//Diana
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		tmp = model = glm::translate(model, glm::vec3(0, 2, -56));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::translate(model, PosIni + glm::vec3(90, movKitY, movKitZ));
+		model = glm::rotate(model, glm::radians(2 * rot), glm::vec3(0.0f, 1.0f, 0.0));	
+		//model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Diana.Draw(lightingShader);
 
 		//Stool 1
 		view = camera.GetViewMatrix();
@@ -743,15 +815,15 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Luces.Draw(lightingShader);
 
-		//Puerta
-		view = camera.GetViewMatrix();
-		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(5, 0, 0));
-		model = glm::translate(model, glm::vec3(posX, posY, posZ));
-		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
-		model = glm::scale(model, glm::vec3(2));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Puerta.Draw(lightingShader);
+		////Puerta
+		//view = camera.GetViewMatrix();
+		//model = glm::mat4(1);
+		//model = glm::translate(model, glm::vec3(5, 0, 0));
+		//model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		//model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		//model = glm::scale(model, glm::vec3(2));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//Puerta.Draw(lightingShader);
 		
 		//tuberias
 		view = camera.GetViewMatrix();
@@ -803,6 +875,16 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		wall3.Draw(lightingShader);
 
+		//wallcita
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(5, 0, 0));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		wallcita.Draw(lightingShader);
+
 		//altar
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
@@ -843,25 +925,17 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		piso.Draw(lightingShader);
 
-		//Puerta
-		view = camera.GetViewMatrix();
-		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(5, 0, 0));
-		model = glm::translate(model, glm::vec3(posX, posY, posZ));
-		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
-		model = glm::scale(model, glm::vec3(2));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Puerta.Draw(lightingShader);
+		////Puerta
+		//view = camera.GetViewMatrix();
+		//model = glm::mat4(1);
+		//model = glm::translate(model, glm::vec3(5, 0, 0));
+		//model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		//model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		//model = glm::scale(model, glm::vec3(2));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//Puerta.Draw(lightingShader);
 
-		//Puerta2
-		view = camera.GetViewMatrix();
-		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(5, 0, 0));
-		model = glm::translate(model, glm::vec3(posX, posY, posZ));
-		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
-		model = glm::scale(model, glm::vec3(2));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Puerta2.Draw(lightingShader);
+
 
 		//Vapor
 		view = camera.GetViewMatrix();
@@ -982,11 +1056,77 @@ void animacion()
 				posZ += KeyFrame[playIndex].incZ;
 
 				rotRodIzq += KeyFrame[playIndex].rotInc;
+				rotManIzq += KeyFrame[playIndex].rotInc3;
+				rotManDer += KeyFrame[playIndex].rotInc4;
+
 
 				i_curr_steps++;
 			}
 
 		}
+
+		if (circuito)
+		{
+			//Ejercicio 1 Movimiento sobre el rectangulo
+			if (recorrido1)
+			{
+				movKitY += 0.25f;
+				if (movKitY > 11.5)
+				{
+					recorrido1 = false;
+					recorrido2 = true;
+				}
+			}
+			if (recorrido2)
+			{
+				movKitZ -= 0.25f;
+				if (movKitZ < -11)
+				{
+					recorrido2 = false;
+					recorrido3 = true;
+
+				}
+			}
+
+			if (recorrido3)
+			{
+				movKitY -= 0.25f;
+				if (movKitY < 3.2)	
+				{
+					recorrido3 = false;
+					recorrido4 = true;
+				}
+			}
+
+			if (recorrido4)
+			{
+				movKitZ += 0.25f;
+				if (movKitZ > 11)
+				{
+					recorrido4 = false;
+					recorrido1 = true;
+				}
+			}
+		}
+
+		if (puerta)
+		{
+			if (55 > rotpuerta) {
+				rotpuerta += 0.25f;
+			}
+			if (55 <= rotpuerta) {
+				aux = true;
+				puerta = false;
+			}
+		}
+		if (aux) {
+				rotpuerta -= 0.25f;
+				if (0 > rotpuerta) {
+					puerta = true;
+					aux = false;
+				}
+			}
+		
 	}
 
 
@@ -1015,12 +1155,7 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 
 	if (keys[GLFW_KEY_K])
 	{
-		if (FrameIndex<MAX_FRAMES)
-		{
-			saveFrame();
-		}
-
-		rot =-25.0f;//Variable que maneja el giro de la camara
+		puerta = true;
 
 	}
 
@@ -1120,7 +1255,15 @@ void DoMovement()
 	}
 
 
+	if (keys[GLFW_KEY_I])
+	{
+		circuito = true;
+	}
 
+	if (keys[GLFW_KEY_O])
+	{
+		circuito = false;
+	}
 
 	// Camera controls
 	if (keys[GLFW_KEY_W] || keys[GLFW_KEY_UP])
