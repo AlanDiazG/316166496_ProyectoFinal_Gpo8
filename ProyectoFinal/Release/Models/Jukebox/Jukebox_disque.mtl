@@ -1,0 +1,258 @@
+newmtl Turntable_bitoniau3
+illum 4
+Kd 0.69 0.69 0.74
+Ka 0.38 0.38 0.38
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.83 0.83 0.83
+Ns 600.00
+newmtl Turntable_bouton_marche_arret3
+illum 4
+Kd 0.69 0.69 0.74
+Ka 0.38 0.38 0.38
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.83 0.83 0.83
+Ns 600.00
+newmtl Turntable_bouton_vit3
+illum 4
+Kd 0.69 0.69 0.74
+Ka 0.38 0.38 0.38
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.83 0.83 0.83
+Ns 600.00
+newmtl Turntable_bouton_vitesse4
+illum 4
+Kd 0.91 0.91 0.91
+Ka 0.40 0.40 0.40
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.62 0.62 0.62
+Ns 600.00
+newmtl Turntable_boutons5
+illum 4
+Kd 0.49 0.49 0.56
+Ka 0.34 0.34 0.34
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 1.00 1.00 1.00
+Ns 600.00
+newmtl Turntable_bras3
+illum 4
+Kd 0.78 0.78 0.78
+Ka 0.40 0.40 0.40
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 1.00 1.00 1.00
+Ns 600.00
+newmtl Turntable_caoutchouc2
+illum 4
+Kd 0.04 0.04 0.05
+Ka 1.00 1.00 1.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.08 0.08 0.08
+Ns 200.00
+newmtl Turntable_dessus_bouton_vit4
+illum 4
+Kd 0.69 0.69 0.74
+Ka 0.38 0.38 0.38
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.83 0.83 0.83
+Ns 600.00
+newmtl Turntable_dorãƒ_3
+illum 4
+Kd 0.50 0.50 0.50
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl Turntable_fleches3
+illum 4
+Kd 0.00 0.00 0.00
+Ka 1.00 1.00 1.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 400.00
+newmtl Turntable_mesure_tete3
+illum 4
+Kd 0.78 0.78 0.78
+Ka 1.00 1.00 1.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 400.00
+newmtl Turntable_mesure_vitesse4
+illum 4
+Kd 0.78 0.78 0.78
+Ka 1.00 1.00 1.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 400.00
+newmtl Turntable_mesure_vitesse_milieu3
+illum 4
+Kd 0.78 0.78 0.78
+Ka 1.00 1.00 1.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 400.00
+newmtl Turntable_milieu_disque4
+illum 4
+Kd 0.95 0.33 0.34
+Ka 1.00 1.00 1.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.65 0.65 0.65
+Ns 200.00
+newmtl Turntable_noir4
+illum 4
+Kd 0.00 0.00 0.00
+Ka 1.00 1.00 1.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 400.00
+newmtl Turntable_plastique_noir4
+illum 4
+Kd 0.25 0.25 0.29
+Ka 0.34 0.34 0.34
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 1.00 1.00 1.00
+Ns 600.00
+newmtl Turntable_plateau7
+illum 4
+Kd 0.04 0.04 0.05
+Ka 0.38 0.38 0.38
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.83 0.83 0.83
+Ns 600.00
+newmtl Turntable_platine8
+illum 4
+Kd 0.04 0.04 0.05
+Ka 0.38 0.38 0.38
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.83 0.83 0.83
+Ns 600.00
+newmtl Turntable_poids4
+illum 4
+Kd 0.91 0.91 0.91
+Ka 0.40 0.40 0.40
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.62 0.62 0.62
+Ns 400.00
+newmtl Turntable_rond_support7
+illum 4
+Kd 0.04 0.04 0.05
+Ka 0.38 0.38 0.38
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.83 0.83 0.83
+Ns 600.00
+newmtl Turntable_rond_support9
+illum 4
+Kd 0.69 0.69 0.74
+Ka 0.38 0.38 0.38
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.83 0.83 0.83
+Ns 600.00
+newmtl Turntable_support13
+illum 4
+Kd 0.69 0.69 0.74
+Ka 0.38 0.38 0.38
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.83 0.83 0.83
+Ns 600.00
+newmtl Turntable_support15
+illum 4
+Kd 0.04 0.04 0.05
+Ka 0.38 0.38 0.38
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.83 0.83 0.83
+Ns 600.00
+newmtl Turntable_support17
+illum 4
+Kd 0.69 0.69 0.74
+Ka 0.38 0.38 0.38
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.83 0.83 0.83
+Ns 600.00
+newmtl Turntable_support_boutons3
+illum 4
+Kd 0.04 0.04 0.05
+Ka 0.38 0.38 0.38
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.83 0.83 0.83
+Ns 600.00
+newmtl Turntable_tete3
+illum 4
+Kd 0.04 0.04 0.05
+Ka 0.38 0.38 0.38
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.83 0.83 0.83
+Ns 600.00
+newmtl Turntable_tetemetal3
+illum 4
+Kd 0.91 0.91 0.91
+Ka 0.40 0.40 0.40
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.62 0.62 0.62
+Ns 600.00
+newmtl Turntable_tour_plateau__et_ronds_3
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.38 0.38 0.38
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.91 0.91 0.91
+Ns 600.00
+newmtl Turntable_vis5
+illum 4
+Kd 0.78 0.78 0.78
+Ka 0.40 0.40 0.40
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 1.00 1.00 1.00
+Ns 600.00
+newmtl initialShadingGroup
+illum 4
+Kd 0.50 0.50 0.50
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl phong1SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd JukeboxV2_Jukebox_Mat_BaseColor.png
+Ni 1.00
+Ks 0.00 0.00 0.00
+map_Ks JukeboxV2_Jukebox_Mat_Emissive.png
+Ns 18.00
+newmtl phong2SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd vinyl_PNG94_(1).png
+Ni 1.00
+Ks 0.00 0.00 0.00
+map_Ks vinyl_PNG94_(1).png
+Ns 18.00

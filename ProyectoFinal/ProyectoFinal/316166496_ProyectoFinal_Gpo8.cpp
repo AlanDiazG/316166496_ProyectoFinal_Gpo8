@@ -832,6 +832,7 @@ int main()
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(posX, posY, posZ));
 		model = glm::translate(model, glm::vec3(60, 0, -70));
+		model = glm::rotate(model, glm::radians(rotdisco), glm::vec3(0.0f, 1.0, 0.0f));
 		model = glm::scale(model, glm::vec3(2));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Chain.Draw(lightingShader);
@@ -1231,7 +1232,7 @@ void MouseCallback(GLFWwindow *window, double xPos, double yPos)
 	camera.ProcessMouseMovement(xOffset, yOffset);
 }
 
-// Moves/alters the camera positions based on user input
+// Moves/changes the camera positions based on user input
 void DoMovement()
 {
 
