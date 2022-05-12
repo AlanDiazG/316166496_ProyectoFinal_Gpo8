@@ -1,42 +1,38 @@
+/*Desarrolló 316166496 - Díaz Alan */
+//Proyecto Final de Lab. Computación Gráfica
+//Proyecto Final: Modelado en 3D del bar "The Last Drop" de la serie animada Arcane
+
+
+//Library import - Importación de las librerias de opengl
 #include <iostream>
 #include <cmath>
-
-// GLEW
-#include <GL/glew.h>
-
-// GLFW
-#include <GLFW/glfw3.h>
-
-// Other Libs
-#include "stb_image.h"
-
-// GLM Mathematics
+#include <GL/glew.h> // GLEW
+#include <GLFW/glfw3.h>  // GLFW
+#include "stb_image.h"// Other Libs
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/type_ptr.hpp> // GLM Mathematics
+#include "SOIL2/SOIL2.h"//Load Models
 
-//Load Models
-#include "SOIL2/SOIL2.h"
-
-
-// Other includes
+// Libraries for the control of camera, shaders, and correct texturization
+// Librerias para el control de camara, texturizado y añadido de shaders
 #include "Shader.h"
 #include "Camera.h"
 #include "Model.h"
 #include "Texture.h"
 #include "modelAnim.h"
 
-// Function prototypes
-void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode);
-void MouseCallback(GLFWwindow *window, double xPos, double yPos);
-void DoMovement();
-void animacion();
+// Function declarations - Declaracion de funciones
+void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode); //Función que detecta el uso de una tecla - Key using function
+void MouseCallback(GLFWwindow *window, double xPos, double yPos); //Detección del mouse - Mouse Detector
+void DoMovement(); //Función activa algún proceso mientras se presione la tecla - While pressing a key a process is done
+void animacion(); //Contiene los procesos para animación de objetos - Holds the instructions for the animation process.
 
-// Window dimensions
-const GLuint WIDTH = 800, HEIGHT = 600;
+// Establece las dimensiones de la ventana - Window dimensions
+const GLuint WIDTH = 800, HEIGHT = 600; //Ancho y alto
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
-// Camera
+// Valores predeterminados para la camara - Camera settings at the beginning
 Camera  camera(glm::vec3(-100.0f, 2.0f, -45.0f));
 GLfloat lastX = WIDTH / 2.0;
 GLfloat lastY = HEIGHT / 2.0;
@@ -44,23 +40,29 @@ bool keys[1024];
 bool firstMouse = true;
 float range = 0.0f;
 float rot = 90.0f;
-float rotpuerta = 0;
-float rotdisco = 0;
-float rotJuke = 0;
+
+//Variables para aumentar o disminuir la rotacion de algún objeto animado
+// Values which save the rotation degrees for some objects in the animation process
+float rotpuerta = 0; //rotar la puerta - Rotate door
+float rotdisco = 0; //Rotar esfera reflectiva - Rotate disco Ball
+float rotJuke = 0; //Rotar disco en rocola - Rotate Vinil disq
 float movCamera = 0.0f;
 
-//Movimiento Diana
+//Variables para designar el movimiento de la Diana en cada eje
+// Bull'seye parameters to move it on real time
 float movKitY = 0.0;
 float movKitZ = 0.0;
 float rotKit = 0.0;
 
+//Boleanos para activar o desactivar un estado en el recorrido de la diana.
+//Booleans to switch between states for the Bull'seye movement.
 bool circuito = false;
 bool recorrido1 = true;
 bool recorrido2 = false;
 bool recorrido3 = false;
 bool recorrido4 = false;
 
-// Light attributes
+// Atributos de la luz en el medio - Light attributes
 glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 glm::vec3 PosIni(-95.0f, 1.0f, -45.0f);
 glm::vec3 lightDirection(0.0f, -1.0f, -1.0f);
@@ -72,10 +74,14 @@ bool active;
 GLfloat deltaTime = 100.0f;	// Time between current frame and last frame
 GLfloat lastFrame = 0.0f;  	// Time of last frame
 
-// Keyframes
+// Variables de posición inicial para la implementacion de animacion Keyframes
+// KeyFrames animation process has initial axis values
 float posX =PosIni.x, posY = PosIni.y, posZ = PosIni.z, rotRodIzq = 0, rotManIzq;
 float rotManDer;
 
+
+//Definición de frames máximos posibles a guardar
+// Max frames for the technique
 #define MAX_FRAMES 9
 int i_max_steps = 190;
 int i_curr_steps = 0;
@@ -88,17 +94,16 @@ typedef struct _frame
 	float incX;		//Variable para IncrementoX
 	float incY;		//Variable para IncrementoY
 	float incZ;		//Variable para IncrementoZ
-	float rotRodIzq;
 	float rotInc;
 	float rotInc3;
 	float rotInc4;
-	float rotManIzq;
-	float rotManDer;
+	float rotManIzq; //Variable para Incremento en la rotación Mano Izq -- Increments rotation value for the left hand of the monkey
+	float rotManDer;//Variable para Incremento en la rotación Mano Der -- Increments rotation value for the right hand of the monkey
 
 }FRAME;
 
 FRAME KeyFrame[MAX_FRAMES];
-int FrameIndex = 0;			//introducir datos
+int FrameIndex = 0;			//Indice de la tupla para los frames - frameindex holder.
 bool play = false;
 bool aux = false;
 bool puerta = false;
@@ -106,7 +111,7 @@ bool disco = false;
 bool Juke = false;
 int playIndex = 0;
 
-// Positions of the point lights
+// Posiciones de las luces de punto - Positions of the point lights
 glm::vec3 pointLightPositions[] = {
 	glm::vec3(posX,posY,posZ),
 	glm::vec3(0,0,0),
@@ -118,35 +123,37 @@ glm::vec3 LightP1;
 
 
 
-
+//FUnción para guardar el estado de la figura en el preciso momento en el que se mande a llamar.
+// SaveFrame function as its name says, saves the KeyFrame in that moment.
 void saveFrame(void)
 {
 
 	printf("posx %f\n", posX);
 	
-	KeyFrame[FrameIndex].posX = posX;
+	KeyFrame[FrameIndex].posX = posX; //Guardamos la posición con respecto al eje - Saves the axis position 
 	KeyFrame[FrameIndex].posY = posY;
 	KeyFrame[FrameIndex].posZ = posZ;
 	
-	KeyFrame[FrameIndex].rotRodIzq = rotRodIzq;
-	KeyFrame[FrameIndex].rotManIzq = rotManIzq;
-	KeyFrame[FrameIndex].rotManDer = rotManDer;
+	KeyFrame[FrameIndex].rotManIzq = rotManIzq; //GUardamos la rotación de la figura - We save the new rotation of the hand
+	KeyFrame[FrameIndex].rotManDer = rotManDer; 
 
 	FrameIndex++;
 }
 
+
+// Regresa la posición actual de la pieza a la original- returns every movement in the figure to the beginning preset.
 void resetElements(void)
 {
 	posX = KeyFrame[0].posX;
 	posY = KeyFrame[0].posY;
 	posZ = KeyFrame[0].posZ;
 
-	rotRodIzq = KeyFrame[0].rotRodIzq;
 	rotManIzq = KeyFrame[0].rotManIzq;
 	rotManDer = KeyFrame[0].rotManDer;
 
 }
 
+// FUncion de interpolación para calcular las posiciones intermedias entre la primera y segunda ubicación - Interpolation of first and last position
 void interpolation(void)
 {
 
@@ -154,7 +161,6 @@ void interpolation(void)
 	KeyFrame[playIndex].incY = (KeyFrame[playIndex + 1].posY - KeyFrame[playIndex].posY) / i_max_steps;
 	KeyFrame[playIndex].incZ = (KeyFrame[playIndex + 1].posZ - KeyFrame[playIndex].posZ) / i_max_steps;
 	
-	KeyFrame[playIndex].rotInc = (KeyFrame[playIndex + 1].rotRodIzq - KeyFrame[playIndex].rotRodIzq) / i_max_steps;
 	KeyFrame[playIndex].rotInc3 = (KeyFrame[playIndex + 1].rotManIzq - KeyFrame[playIndex].rotManIzq) / i_max_steps;
 	KeyFrame[playIndex].rotInc4 = (KeyFrame[playIndex + 1].rotManDer - KeyFrame[playIndex].rotManDer) / i_max_steps;
 }
@@ -164,22 +170,15 @@ void interpolation(void)
 
 int main()
 {
-	// Init GLFW
+	// Inicializa la librería Init GLFW
 	glfwInit();
 
 
+	// Creando la ventana de ejecución - Create a GLFWwindow object that we can use for GLFW's functions
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Proyecto Final", nullptr, nullptr);
 
-
-	// Set all the required options for GLFW
-	/*(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);*/
-
-	// Create a GLFWwindow object that we can use for GLFW's functions
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Practica 12", nullptr, nullptr);
-
+	// Si no se puede crear la ventana por alguna razón devolverá un fallo y acabará el programa
+	// In case the window isn't created it crashes
 	if (nullptr == window)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -217,51 +216,50 @@ int main()
 	glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+
+	//Importamos las librerias para las luces - Import light shaders
 	Shader lightingShader("Shaders/lighting.vs", "Shaders/lighting.frag");
 	Shader lampShader("Shaders/lamp.vs", "Shaders/lamp.frag");
-	Shader SkyBoxshader("Shaders/SkyBox.vs", "Shaders/SkyBox.frag");
-	Shader animShader("Shaders/anim.vs", "Shaders/anim.frag");
 
+	// Cargamos los modelos y los nombramos - We load each 3d model and assign it to a model name.
 	Model Mesa_circular((char*)"Models/Mesa_circular/Mesa_circular.obj");
 	Model Hookah((char*)"Models/Hookah/Hookah.obj");
 	Model Sofa((char*)"Models/Sofa/Sofa.obj");
 	Model Guante((char*)"Models/Guante/Guante.obj");
 	Model Luces((char*)"Models/House/Luces_esfericas.obj");
-	
-	Model palco((char*)"Models/House2/palco.obj"); //funciona
-	Model tuberias((char*)"Models/House2/tuberias.obj"); //funciona
-	Model wall((char*)"Models/House3/wall.obj"); //funciona
-	Model wall1((char*)"Models/House3/wall1.obj"); //funciona
-	Model wall2((char*)"Models/House3/wall2.obj"); //funciona
-	//Model wall3((char*)"Models/House3/wall3.obj"); //funciona
-	Model wall3((char*)"Models/Houseall/puerta_cortada.obj"); //funciona
-	Model wallcita((char*)"Models/Houseall/paredcita.obj"); //funciona
-	Model vapor((char*)"Models/House3/vapor.obj"); //funciona
-	Model altar((char*)"Models/House4/altar.obj"); //funciona
-	Model beer((char*)"Models/HouseAll/beer.obj"); //funciona
-	Model ventana((char*)"Models/HouseAll/ventana.obj"); //funciona
-	Model piso((char*)"Models/HouseAll/piso.obj"); //funciona
-	//Model Puerta((char*)"Models/HouseAll/puerta.obj"); //funciona
-	Model Puerta2((char*)"Models/HouseAll/puerta_azul.obj"); //funciona
-	Model techo((char*)"Models/Techo/techo.obj"); //funciona
-	Model Jukebox((char*)"Models/Jukebox/Jukebox.obj"); //funciona
-	Model Disque((char*)"Models/Jukebox/Jukebox_disque.obj"); //funciona
-	Model Luz_techo((char*)"Models/Luz_techo/Luz_techo.obj"); //funciona
-	Model Barra((char*)"Models/Barra/Barra.obj"); //funciona
-	Model Stool((char*)"Models/Stool/Stool.obj"); //funciona
-	Model Monkey((char*)"Models/Changuito/Monkey.obj"); //funciona
-	Model Monkey_izq((char*)"Models/Changuito/Monkey_Izq.obj"); //funciona
-	Model Monkey_der((char*)"Models/Changuito/Monkey_Der.obj"); //funciona
-	Model Diana((char*)"Models/Diana/Diana.obj"); //funciona
-	Model ball((char*)"Models/Disco/ball.obj"); //funciona
-	Model Chain((char*)"Models/Disco/Chain.obj"); //funciona
-	Model Barril((char*)"Models/Barriles/Barril.obj"); //funciona
+	Model palco((char*)"Models/House2/palco.obj"); 
+	Model tuberias((char*)"Models/House2/tuberias.obj"); 
+	Model wall((char*)"Models/House3/wall.obj"); 
+	Model wall1((char*)"Models/House3/wall1.obj"); 
+	Model wall2((char*)"Models/House3/wall2.obj"); 
+	Model wall3((char*)"Models/Houseall/puerta_cortada.obj"); 
+	Model wallcita((char*)"Models/Houseall/paredcita.obj");
+	Model vapor((char*)"Models/House3/vapor.obj"); 
+	Model altar((char*)"Models/House4/altar.obj");
+	Model beer((char*)"Models/HouseAll/beer.obj"); 
+	Model ventana((char*)"Models/HouseAll/ventana.obj");
+	Model piso((char*)"Models/HouseAll/piso.obj"); 
+	Model Puerta2((char*)"Models/HouseAll/puerta_azul.obj");
+	Model techo((char*)"Models/Techo/techo.obj"); 
+	Model Jukebox((char*)"Models/Jukebox/Jukebox.obj"); 
+	Model Disque((char*)"Models/Jukebox/Jukebox_disque.obj");
+	Model Luz_techo((char*)"Models/Luz_techo/Luz_techo.obj"); 
+	Model Barra((char*)"Models/Barra/Barra.obj");
+	Model Stool((char*)"Models/Stool/Stool.obj"); 
+	Model Monkey((char*)"Models/Changuito/Monkey.obj");
+	Model Monkey_izq((char*)"Models/Changuito/Monkey_Izq.obj");
+	Model Monkey_der((char*)"Models/Changuito/Monkey_Der.obj"); 
+	Model Diana((char*)"Models/Diana/Diana.obj"); 
+	Model ball((char*)"Models/Disco/ball.obj"); 
+	Model Chain((char*)"Models/Disco/Chain.obj"); 
+	Model Barril((char*)"Models/Barriles/Barril.obj"); 
 
 
 	// Build and compile our shader program
 
-	//Inicialización de KeyFrames
-	
+	//Inicialización de KeyFrames - KeyFrame Initialize
+	// Cada Keyframe podra guardar la posicion o rotacion de la figura por cada indice
+	// Saves each frame the times the key has been used
 	for(int i=0; i<MAX_FRAMES; i++)
 	{
 		KeyFrame[i].posX = 0;
@@ -273,7 +271,7 @@ int main()
 	}
 
 
-
+	// Establece las posiciones y normales de algunos apuntadores
 	// Set up vertex data (and buffer(s)) and attribute pointers
 	GLfloat vertices[] =
 	{
@@ -322,6 +320,7 @@ int main()
 	};
 
 
+	//Se crean las caras del skybox para añadir el fondo - skybox vertex arrays are created
 	GLfloat skyboxVertices[] = {
 		// Positions
 		-1.0f,  1.0f, -1.0f,
@@ -432,17 +431,8 @@ int main()
 	glBindVertexArray(0);
 
 
-	//SkyBox
-	GLuint skyboxVBO, skyboxVAO;
-	glGenVertexArrays(1, &skyboxVAO);
-	glGenBuffers(1,&skyboxVBO);
-	glBindVertexArray(skyboxVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices),&skyboxVertices,GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT,GL_FALSE, 3 * sizeof(GLfloat), (GLvoid *)0);
 
-	//Set Monkey movement
+	//Establecemos los frames en cada indice de KeyFrames - Set Monkey movement for every inder in KeyFrames function
 	rotManDer = -10;
 	rotManIzq = 10;
 	saveFrame();
@@ -459,7 +449,7 @@ int main()
 	rotManIzq = 10;
 	saveFrame();
 
-	// Load textures
+	// Carga las texturas de nuestro fondo - Load textures of the skybox
 	vector<const GLchar*> faces;
 	faces.push_back("SkyBox/right.tga");
 	faces.push_back("SkyBox/left.tga");
@@ -501,14 +491,14 @@ int main()
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 32.0f);
 		// == ==========================
 		// Here we set all the uniforms for the 5/6 types of lights we have. We have to set them manually and index
-		// the proper PointLight struct in the array to set each uniform variable. This can be done more code-friendly
-		// by defining light types as classes and set their values in there, or by using a more efficient uniform approach
-		// by using 'Uniform buffer objects', but that is something we discuss in the 'Advanced GLSL' tutorial.
+		// the proper PointLight struct in the array to set each uniform variable. 
+		// // == ==========================
+		// Aqui debemos de establecer los 5 de 6 tipos de luces que tenemos. Lo hacemos manualmente para establecer cada una de las variables. 
 		// == ==========================
 		// Directional light
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.direction"), -0.2f, -1.0f, -0.3f);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.ambient"), 1.0f, 1.0f, 1.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), 0.4f, 0.4f, 0.4f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.diffuse"), 0.2f, 0.2f, 0.2f);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"), 0.5f, 0.5f, 0.5f);
 
 
@@ -593,7 +583,13 @@ int main()
 
 
 		//Carga de modelo 
-
+		// == ==========================
+		// En esta parte se hace la carga de todos los modelos de nuestro proyecto. Les aplicamos transformaciones basicas como el escalado por 2 para que sean el doble de su tamaño y se aprecien bien.
+		// Las traslaciones para que aparezcan en el punto exacto dentro o fuera de la fachada y por último las rotaciones para que estén bien orientados.
+		// == ==========================
+		// In this section we load all the  models for our project. In here I had the duty to transform this figures with the functions of scale, rotate or translate to get them 
+		// in the right position inside or outside the building.
+		// == ==========================
 		
 		//Guante
 		view = camera.GetViewMatrix();
@@ -682,7 +678,6 @@ int main()
 		model = glm::translate(model, glm::vec3(posX, posY, posZ));
 		model = glm::translate(model, PosIni + glm::vec3(90, movKitY, movKitZ));
 		model = glm::rotate(model, glm::radians(2 * rot), glm::vec3(0.0f, 1.0f, 0.0));	
-		//model = glm::scale(model, glm::vec3(2));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Diana.Draw(lightingShader);
 
@@ -999,38 +994,12 @@ int main()
 		glBindVertexArray(0);
 
 
-		//// Draw skybox as last
-		//glDepthFunc(GL_LEQUAL);  // Change depth function so depth test passes when values are equal to depth buffer's content
-		//SkyBoxshader.Use();
-		//view = glm::mat4(glm::mat3(camera.GetViewMatrix()));	// Remove any translation component of the view matrix
-		//glUniformMatrix4fv(glGetUniformLocation(SkyBoxshader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
-		//glUniformMatrix4fv(glGetUniformLocation(SkyBoxshader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-
-		//// skybox cube
-		//glBindVertexArray(skyboxVAO);
-		//glActiveTexture(GL_TEXTURE1);
-		//glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-		//glDrawArrays(GL_TRIANGLES, 0, 36);
-		//glBindVertexArray(0);
-		//glDepthFunc(GL_LESS); // Set depth function back to default
-
-
-
-
 		// Swap the screen buffers
 		glfwSwapBuffers(window);
 	}
 
 
 
-
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteVertexArrays(1, &lightVAO);
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
-	glDeleteVertexArrays(1, &skyboxVAO);
-	glDeleteBuffers(1, &skyboxVBO);
-	// Terminate GLFW, clearing any resources allocated by GLFW.
 	glfwTerminate();
 
 
@@ -1043,8 +1012,9 @@ int main()
 void animacion()
 {
 
-		//Movimiento del personaje
-
+		//Movimiento del changuito - Monkey's movement
+		// Cuando play sea verdadero nos dejará entrar a su proceso donde a través de la interpolacion se puede animar el movimiento del objeto.
+		//Play will be true when we press L in our keyboard, and it'll use interpolation to make the movement from one site to another.
 		if (play)
 		{
 			if (i_curr_steps >= i_max_steps) //end of animation between frames?
@@ -1065,7 +1035,7 @@ void animacion()
 			}
 			else
 			{
-				//Draw animation
+				//Dibujamos la animación - Draw animation
 				posX += KeyFrame[playIndex].incX;
 				posY += KeyFrame[playIndex].incY;
 				posZ += KeyFrame[playIndex].incZ;
@@ -1080,21 +1050,23 @@ void animacion()
 
 		}
 
+		/* Si circuito está activo entonces se producirá el movimiento de la Diana que se actualiza cuando rebase cierto rango para avanzar en otro eje. 
+		   If it's active then our Bullseye will move in a square shape*/
 		if (circuito)
 		{
 			//Ejercicio 1 Movimiento sobre el rectangulo
 			if (recorrido1)
 			{
-				movKitY += 0.25f;
+				movKitY += 0.25f; //Mueve la diana en el eje Y  -  Moves the bullseye in Y axis 
 				if (movKitY > 11.5)
 				{
-					recorrido1 = false;
-					recorrido2 = true;
+					recorrido1 = false; //Desactivamos el estado para poder entrar al siguiente de inmediato 
+					recorrido2 = true; // We deactivate the states to change the direction in which it continues moving.
 				}
 			}
 			if (recorrido2)
 			{
-				movKitZ -= 0.25f;
+				movKitZ -= 0.25f; //Mueve la diana en el eje Z  -  Moves the bullseye in Z axis 
 				if (movKitZ < -11)
 				{
 					recorrido2 = false;
@@ -1105,7 +1077,7 @@ void animacion()
 
 			if (recorrido3)
 			{
-				movKitY -= 0.25f;
+				movKitY -= 0.25f; //Mueve la diana en el eje Y  -  Moves the bullseye in Y axis 
 				if (movKitY < 3.2)	
 				{
 					recorrido3 = false;
@@ -1115,7 +1087,7 @@ void animacion()
 
 			if (recorrido4)
 			{
-				movKitZ += 0.25f;
+				movKitZ += 0.25f; //Mueve la diana en el eje Z  -  Moves the bullseye in Z axis 
 				if (movKitZ > 11)
 				{
 					recorrido4 = false;
@@ -1124,6 +1096,8 @@ void animacion()
 			}
 		}
 
+		//Si la puerta está activada entonces oscilará su valor de rotación para que simule que está abriendose
+		// If the door is activated the movement between one and othe state is declared 
 		if (puerta)
 		{
 			if (55 > rotpuerta) {
@@ -1142,9 +1116,17 @@ void animacion()
 				}
 			}
 		
+
+		// Para la esfera de disco se aumentará en razon de .3 para que gira lentamente.
+		// If activated it while spin by itself
 		if (disco) {
 			rotdisco += 0.3f;
 		}
+
+
+
+		// Para el disco dentro de la rocola se aumentará en razon de .3 para que gira lentamente,´nuevamente.
+		// If activated it while spin by itself 
 
 		if (Juke) {
 			rotJuke += 0.3f;
@@ -1152,9 +1134,12 @@ void animacion()
 	}
 
 
-// Is called whenever a key is pressed/released via GLFW
+// Hace todo lo que le indique mientras se esten doblan sos piernas. -  Is called whenever a key is pressed/released via GLFW
 void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode)
 {
+	//Luego de presionar la L se hace la interpolación para mover la figura en un eje.
+	//After activating L the interpolation is done to make it rotate in the same axis.
+	
 	if (keys[GLFW_KEY_L])
 	{
 		if (play == false && (FrameIndex > 1))
@@ -1175,9 +1160,12 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 
 	}
 
+
+	//Si presionamos la tecla cambiará el valor de su boleano por defecto. En este caso pasará de false a true
+	//When pushing the Key it will activate the movement detailed on the animation function
 	if (keys[GLFW_KEY_K])
 	{
-		puerta = true;
+		puerta = not puerta;
 
 	}
 
@@ -1193,7 +1181,9 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 
 	}
 
-
+	//Debido a esta función cada vez que presionamos la tecla solo cuenta como si se apretara una vez, gracias a esto si mantenemos
+	//la tecla oprimida aún así solo se activará una vez el comando
+	//This instructions let us push a key without updating more than once the value of the variable while still pressing the key.
 	if (GLFW_KEY_ESCAPE == key && GLFW_PRESS == action)
 	{
 		glfwSetWindowShouldClose(window, GL_TRUE);
@@ -1210,7 +1200,8 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 			keys[key] = false;
 		}
 	}
-
+	// Prende la luz 1
+	//Turns on the light 1
 	if (keys[GLFW_KEY_SPACE])
 	{
 		active = !active;
@@ -1251,68 +1242,46 @@ void DoMovement()
 
 	}
 
-
-	//Mov Personaje
-	if (keys[GLFW_KEY_H])
-	{
-		posZ += 1;
-	}
-
-	if (keys[GLFW_KEY_Y])
-	{
-		posZ -= 1;
-	}
-
-	if (keys[GLFW_KEY_G])
-	{
-		posX -= 1;
-	}
-
-	if (keys[GLFW_KEY_J])
-	{
-		posX += 1;
-	}
-
-
+	// Inicia el movimiento para la diana
+	// Activates the animation for the bullseye
 	if (keys[GLFW_KEY_I])
 	{
 		circuito = true;
 	}
-
+	
+	//Detiene la diana en cualquier punto
+	// Deactivates the animation for the bullseye
 	if (keys[GLFW_KEY_O])
 	{
 		circuito = false;
 	}
 
+	// Controles de la camara
 	// Camera controls
-	if (keys[GLFW_KEY_W] || keys[GLFW_KEY_UP])
+	if (keys[GLFW_KEY_W] || keys[GLFW_KEY_UP]) //Permite que la camara se mueva en vertical - Let's the camera move up
 	{
 		camera.ProcessKeyboard(FORWARD, deltaTime);
 
 	}
 
-	if (keys[GLFW_KEY_S] || keys[GLFW_KEY_DOWN])
+	if (keys[GLFW_KEY_S] || keys[GLFW_KEY_DOWN]) //Permite que la camara se mueva en vertical, hacia abajo - Let's the camera move down
 	{
 		camera.ProcessKeyboard(BACKWARD, deltaTime);
 
 
 	}
 
-	if (keys[GLFW_KEY_A] || keys[GLFW_KEY_LEFT])
+	if (keys[GLFW_KEY_A] || keys[GLFW_KEY_LEFT]) //Permite que la camara se mueva hacia la izquierda - Let's the camera move left
 	{
 		camera.ProcessKeyboard(LEFT, deltaTime);
 
 
 	}
 
-	if (keys[GLFW_KEY_D] || keys[GLFW_KEY_RIGHT])
+	if (keys[GLFW_KEY_D] || keys[GLFW_KEY_RIGHT]) //Permite que la camara se mueva a la derecha - Let's the camera move to the right
 	{
 		camera.ProcessKeyboard(RIGHT, deltaTime);
 	}
-
-
-
-
 
 
 }
