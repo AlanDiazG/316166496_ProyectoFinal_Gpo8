@@ -45,6 +45,8 @@ bool firstMouse = true;
 float range = 0.0f;
 float rot = 90.0f;
 float rotpuerta = 0;
+float rotdisco = 0;
+float rotJuke = 0;
 float movCamera = 0.0f;
 
 //Movimiento Diana
@@ -100,6 +102,8 @@ int FrameIndex = 0;			//introducir datos
 bool play = false;
 bool aux = false;
 bool puerta = false;
+bool disco = false;
+bool Juke = false;
 int playIndex = 0;
 
 // Positions of the point lights
@@ -222,7 +226,6 @@ int main()
 	Model Hookah((char*)"Models/Hookah/Hookah.obj");
 	Model Sofa((char*)"Models/Sofa/Sofa.obj");
 	Model Guante((char*)"Models/Guante/Guante.obj");
-	Model Puerta((char*)"Models/House/Puerta.obj");
 	Model Luces((char*)"Models/House/Luces_esfericas.obj");
 	
 	Model palco((char*)"Models/House2/palco.obj"); //funciona
@@ -250,6 +253,9 @@ int main()
 	Model Monkey_izq((char*)"Models/Changuito/Monkey_Izq.obj"); //funciona
 	Model Monkey_der((char*)"Models/Changuito/Monkey_Der.obj"); //funciona
 	Model Diana((char*)"Models/Diana/Diana.obj"); //funciona
+	Model ball((char*)"Models/Disco/ball.obj"); //funciona
+	Model Chain((char*)"Models/Disco/Chain.obj"); //funciona
+	Model Barril((char*)"Models/Barriles/Barril.obj"); //funciona
 
 
 	// Build and compile our shader program
@@ -664,7 +670,7 @@ int main()
 		model = glm::translate(model, glm::vec3(-4.8, 0, 23.6));
 		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
 		model = glm::rotate(model, glm::radians(rotpuerta), glm::vec3(0.0f, 1.0, 0.0f));
-		model = glm::scale(model, glm::vec3(2));
+		model = glm::scale(model, glm::vec3(2));//d
 
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Puerta2.Draw(lightingShader);
@@ -788,10 +794,11 @@ int main()
 		//Disque
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(20, 4.8, -1.7));
+		model = glm::translate(model, glm::vec3(20.9, 1, 18.6));
 		model = glm::translate(model, glm::vec3(posX, posY, posZ));
-		model = glm::rotate(model, glm::radians(2 * rot), glm::vec3(0.0f, 1.0f, 0.0));
-		model = glm::scale(model, glm::vec3(.4));
+		
+		model = glm::rotate(model, glm::radians(rotJuke), glm::vec3(0.0f, 1.0, 0.0f));
+		model = glm::scale(model, glm::vec3(.58));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Disque.Draw(lightingShader);
 
@@ -805,6 +812,16 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		palco.Draw(lightingShader);
 
+		//Barriles
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(5, 0, 0));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Barril.Draw(lightingShader);
+
 		//Luces
 		view = camera.GetViewMatrix();
 		model = glm::mat4(1);
@@ -815,15 +832,24 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Luces.Draw(lightingShader);
 
-		////Puerta
-		//view = camera.GetViewMatrix();
-		//model = glm::mat4(1);
-		//model = glm::translate(model, glm::vec3(5, 0, 0));
-		//model = glm::translate(model, glm::vec3(posX, posY, posZ));
-		//model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
-		//model = glm::scale(model, glm::vec3(2));
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//Puerta.Draw(lightingShader);
+		//Chain
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::translate(model, glm::vec3(60, 0, -70));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Chain.Draw(lightingShader);
+
+		//ball
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::translate(model, glm::vec3(60, 0, -70));
+		model = glm::rotate(model, glm::radians(rotdisco), glm::vec3(0.0f, 1.0, 0.0f));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		ball.Draw(lightingShader);
 		
 		//tuberias
 		view = camera.GetViewMatrix();
@@ -924,17 +950,6 @@ int main()
 		model = glm::scale(model, glm::vec3(2));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		piso.Draw(lightingShader);
-
-		////Puerta
-		//view = camera.GetViewMatrix();
-		//model = glm::mat4(1);
-		//model = glm::translate(model, glm::vec3(5, 0, 0));
-		//model = glm::translate(model, glm::vec3(posX, posY, posZ));
-		//model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
-		//model = glm::scale(model, glm::vec3(2));
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//Puerta.Draw(lightingShader);
-
 
 
 		//Vapor
@@ -1127,6 +1142,13 @@ void animacion()
 				}
 			}
 		
+		if (disco) {
+			rotdisco += 0.3f;
+		}
+
+		if (Juke) {
+			rotJuke += 0.3f;
+		}
 	}
 
 
@@ -1156,6 +1178,18 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 	if (keys[GLFW_KEY_K])
 	{
 		puerta = true;
+
+	}
+
+	if (keys[GLFW_KEY_P])
+	{
+		disco = not disco;
+
+	}
+
+	if (keys[GLFW_KEY_U])
+	{
+		Juke = not Juke;
 
 	}
 
@@ -1217,21 +1251,6 @@ void DoMovement()
 
 	}
 
-	if (keys[GLFW_KEY_2])
-	{
-		if (rotRodIzq<80.0f)
-			rotRodIzq += 1.0f;
-			
-	}
-
-	if (keys[GLFW_KEY_3])
-	{
-		if (rotRodIzq>-45)
-			rotRodIzq -= 1.0f;
-		
-	}
-
-	
 
 	//Mov Personaje
 	if (keys[GLFW_KEY_H])
