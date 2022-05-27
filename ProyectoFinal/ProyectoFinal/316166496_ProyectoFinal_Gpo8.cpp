@@ -229,7 +229,7 @@ int main()
 	Model Luces((char*)"Models/House/Luces_esfericas.obj");
 	Model palco((char*)"Models/House2/palco.obj"); 
 	Model tuberias((char*)"Models/House2/tuberias.obj"); 
-	Model wall((char*)"Models/House3/wall.obj"); 
+	Model wall((char*)"Models/House3/wall_2.obj"); 
 	Model wall1((char*)"Models/House3/wall1.obj"); 
 	Model wall2((char*)"Models/House3/wall2.obj"); 
 	Model wall3((char*)"Models/Houseall/puerta_cortada.obj"); 
@@ -252,7 +252,25 @@ int main()
 	Model Diana((char*)"Models/Diana/Diana.obj"); 
 	Model ball((char*)"Models/Disco/ball.obj"); 
 	Model Chain((char*)"Models/Disco/Chain.obj"); 
-	Model Barril((char*)"Models/Barriles/Barril.obj"); 
+	Model Barril((char*)"Models/Barriles/Barril.obj");
+
+	// Estudio
+	Model baul((char*)"Models/estudio/paredes/baul.obj");
+	Model closet((char*)"Models/estudio/paredes/closet.obj");
+	Model escalera((char*)"Models/estudio/paredes/escalera.obj");
+	Model escritorio((char*)"Models/estudio/paredes/escritorio.obj");
+	Model flor((char*)"Models/estudio/paredes/flor.obj");
+	Model lampara((char*)"Models/estudio/paredes/lampara.obj");
+	Model libro((char*)"Models/estudio/paredes/libro.obj");
+	Model mesa((char*)"Models/estudio/paredes/mesa.obj");
+	Model papel((char*)"Models/estudio/paredes/papel.obj");
+	Model pared((char*)"Models/estudio/paredes/pared.obj");
+	Model piso2((char*)"Models/estudio/paredes/piso.obj");
+	Model reloj((char*)"Models/estudio/paredes/reloj.obj");
+	Model silla((char*)"Models/estudio/paredes/silla.obj");
+	Model silla2((char*)"Models/estudio/paredes/silla2.obj");
+	Model sofa((char*)"Models/estudio/paredes/sofa.obj");
+	Model techo2((char*)"Models/estudio/paredes/techo.obj");
 
 
 	// Build and compile our shader program
@@ -591,7 +609,7 @@ int main()
 		// in the right position inside or outside the building.
 		// == ==========================
 		
-		//Guante
+		//Guante 
 		view = camera.GetViewMatrix();
 		glm::mat4 model(1);
 		tmp = model = glm::translate(model, glm::vec3(52, 10.3, -53));
@@ -967,6 +985,192 @@ int main()
 		model = glm::scale(model, glm::vec3(2));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		techo.Draw(lightingShader);
+		
+		/////////Sección Proyecto Final de Teoría
+		//pared
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(5, 0, 0));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		pared.Draw(lightingShader);
+
+		//pared
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(5, 0, 0));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		pared.Draw(lightingShader);
+
+		//baul
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(5, 0, 0));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		baul.Draw(lightingShader);
+
+		//closet
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(5, 0, 0));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		closet.Draw(lightingShader);
+
+		//escalera
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(5, 0, 0));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		escalera.Draw(lightingShader);
+
+		//escritorio
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(5, 0, 0));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		escritorio.Draw(lightingShader);
+
+		//flor
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(5, 0, 0));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		flor.Draw(lightingShader);
+
+		//lampara
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(5, 0, 0));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		lampara.Draw(lightingShader);
+
+		//libro
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(5, 0, 0));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		libro.Draw(lightingShader);
+
+		
+		//mesa
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(5, 0, 0));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		mesa.Draw(lightingShader);
+
+		//papel
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(5, 0, 0));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		papel.Draw(lightingShader);
+
+		//pared
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(5, 0, 0));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		pared.Draw(lightingShader);
+
+		//piso2
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(5, 0, 0));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		piso2.Draw(lightingShader);
+
+		//reloj
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(5, 0, 0));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		reloj.Draw(lightingShader);
+
+		
+		//silla
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(5, 0, 0));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		silla.Draw(lightingShader);
+
+
+		//silla2
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(5, 0, 0));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		silla2.Draw(lightingShader);
+
+
+		//sofa
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(5, 0, 0));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		sofa.Draw(lightingShader);
+
+
+		//techo2
+		view = camera.GetViewMatrix();
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(5, 0, 0));
+		model = glm::translate(model, glm::vec3(posX, posY, posZ));
+		model = glm::rotate(model, glm::radians(3 * rot), glm::vec3(0.0f, 1.0f, 0.0));
+		model = glm::scale(model, glm::vec3(2));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		techo2.Draw(lightingShader);
 
 		// Also draw the lamp object, again binding the appropriate shader
 		lampShader.Use();
